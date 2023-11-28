@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -28,7 +29,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
-        $token = $user->createToken('startup')->plainTextToken;
+        $token = $user->createToken('myApp')->plainTextToken;
 
         return response()->json([
             'user' => $user,
@@ -56,7 +57,7 @@ class AuthController extends Controller
         if (!Hash::check($request->password, $user->password)) {
             return response()->json('password is incorrect', 401);
         }
-        $token = $user->createToken('startup')->plainTextToken;
+        $token = $user->createToken('myApp')->plainTextToken;
 
         return response()->json([
             'user' => $user,
@@ -66,7 +67,8 @@ class AuthController extends Controller
     }
     public function me()
     {
-        return response()->json(auth()->user(), 200);
+        $user = User::find(Auth::id());
+        return response()->json(['user' => $user], 200);
     }
     public function logout()
     {
