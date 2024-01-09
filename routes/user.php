@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-
+use App\Http\Controllers\user\ads\PropertyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +19,15 @@ use App\Http\Controllers\AuthController;
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
+
+
+Route::prefix('user')->middleware('auth:sanctum')->group(function () {
+
+
+    Route::prefix('/property')->group(function () {
+        Route::controller(PropertyController::class)->group(function () {
+            Route::post('/create_rental', 'create_rental');
+            Route::get('/create_rental/{id}', 'get_rental');
+        });
+    });
+});
