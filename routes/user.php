@@ -21,13 +21,12 @@ use App\Http\Controllers\user\ads\PropertyController;
 // });
 
 
-Route::prefix('user')->middleware('auth:sanctum')->group(function () {
-
+Route::prefix('user')->middleware('auth:api')->group(function () {
 
     Route::prefix('/property')->group(function () {
         Route::controller(PropertyController::class)->group(function () {
             Route::post('/create_rental', 'create_rental');
             Route::get('/create_rental/{id}', 'get_rental');
-        });
+        }); 
     });
 });

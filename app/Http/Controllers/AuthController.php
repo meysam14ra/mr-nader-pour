@@ -29,7 +29,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
-        $token = $user->createToken('myApp')->plainTextToken;
+        $token = $user->createToken('myApp')->accessToken;
 
         return response()->json([
             'user' => $user,
@@ -57,7 +57,7 @@ class AuthController extends Controller
         if (!Hash::check($request->password, $user->password)) {
             return response()->json('password is incorrect', 401);
         }
-        $token = $user->createToken('myApp')->plainTextToken;
+        $token = $user->createToken('myApp')->accessToken;
 
         return response()->json([
             'user' => $user,
