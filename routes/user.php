@@ -27,6 +27,10 @@ Route::prefix('user')->middleware('auth:api')->group(function () {
         Route::controller(PropertyController::class)->group(function () {
             Route::post('/create_rental', 'create_rental');
             Route::get('/create_rental/{id}', 'get_rental');
-        }); 
+            Route::post('/create_amenities/{id}', 'create_amenities');
+            // Route::post('/create_amenities/{id}', function ( ) {
+            //     return 'salam';
+            // });
+        });
     });
 });
