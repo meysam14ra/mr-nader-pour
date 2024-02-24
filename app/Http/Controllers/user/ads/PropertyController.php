@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers\user\ads;
 
+use Throwable;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Property;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ApiController;
 use Illuminate\Support\Facades\Validator;
-use Throwable;
 
-class PropertyController extends Controller
+class PropertyController extends ApiController
 {
     public function create_rental(Request $request)
     {
@@ -74,7 +76,7 @@ class PropertyController extends Controller
 
     public function create_amenities(Request $request,  $id)
     {
-        // dd($request);
+        // dd($request->has('laundry'));
         $user = User::find(Auth::id());
         $property = Property::findOrFail($id);
         $validator = Validator::make($request->all(), []);
@@ -123,6 +125,44 @@ class PropertyController extends Controller
                 'accessibility' => $accessibility,
             ]);
             return response()->json(['data' => $property], 200);
+        } catch (Throwable $error) {
+            return response()->json([$error]);
+        };
+    }
+    public function create_media(Request $request,  $id)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'images.*' => 'image',
+            'videos.*' => 'mimetypes:video/mp4',
+
+        ]);
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->messages(), 422);
+        }
+
+        if ($request->has('images') && $request->images !== null && $request->file('images')) {
+            $fileNameImages = [];
+            foreach ($request->images as $image) {
+                $fileNameImage = Carbon::now()->microsecond . '.' . $image->extension();
+                $image->move(env('PROPERTIES_IMAGE_PATH'), $fileNameImage);
+                array_push($fileNameImages, $fileNameImage);
+            }
+        }
+        if ($request->has('videos') && $request->videos !== null && $request->file('videos')) {
+            $fileNameVideos = [];
+            foreach ($request->videos as $video) {
+                $fileNamevideo = Carbon::now()->microsecond . '.' . $video->extension();
+                $video->move(env('PROPERTIES_VIDEO_PATH'), $fileNamevideo);
+                array_push($fileNameVideos, $fileNamevideo);
+            }
+        }
+
+
+        $user = User::find(Auth::id());
+        $property = Property::findOrFail($id);
+        try {
+            return $this->successResponse($fileNameVideos, 201);
         } catch (Throwable $error) {
             return response()->json([$error]);
         };
