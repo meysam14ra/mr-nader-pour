@@ -131,6 +131,7 @@ class PropertyController extends ApiController
     }
     public function create_media(Request $request,  $id)
     {
+        $property = Property::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
             'images.*' => 'image',
@@ -142,27 +143,30 @@ class PropertyController extends ApiController
         }
 
         if ($request->has('images') && $request->images !== null && $request->file('images')) {
-            $fileNameImages = [];
+            // $fileNameImages = [];
             foreach ($request->images as $image) {
                 $fileNameImage = Carbon::now()->microsecond . '.' . $image->extension();
                 $image->move(env('PROPERTIES_IMAGE_PATH'), $fileNameImage);
-                array_push($fileNameImages, $fileNameImage);
+                // array_push($fileNameImages, $fileNameImage);
+                $property->images()->create([
+                    'image' => $fileNameImage,
+                ]);
             }
         }
         if ($request->has('videos') && $request->videos !== null && $request->file('videos')) {
-            $fileNameVideos = [];
             foreach ($request->videos as $video) {
                 $fileNamevideo = Carbon::now()->microsecond . '.' . $video->extension();
                 $video->move(env('PROPERTIES_VIDEO_PATH'), $fileNamevideo);
-                array_push($fileNameVideos, $fileNamevideo);
+                $property->videos()->create([
+                    'video' => $fileNamevideo,
+                ]);
             }
         }
 
 
-        $user = User::find(Auth::id());
-        $property = Property::findOrFail($id);
+        // $user = User::find(Auth::id());
         try {
-            return $this->successResponse($fileNameVideos, 201);
+            return $this->successResponse($property, 201);
         } catch (Throwable $error) {
             return response()->json([$error]);
         };
