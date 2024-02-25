@@ -71,8 +71,11 @@ class PropertyController extends ApiController
     public function get_rental(int $id)
     {
         $property = Property::findOrFail($id);
+        $images = $property->images->get(3);
+
         return response(['data', $property], 200);
     }
+ 
 
     public function create_amenities(Request $request,  $id)
     {
@@ -124,7 +127,7 @@ class PropertyController extends ApiController
                 'amenities' => $amenities,
                 'accessibility' => $accessibility,
             ]);
-            return response()->json(['data' => $property], 200);
+            return $this->successResponse($property, 200);
         } catch (Throwable $error) {
             return response()->json([$error]);
         };
@@ -164,11 +167,47 @@ class PropertyController extends ApiController
         }
 
 
-        // $user = User::find(Auth::id());
         try {
             return $this->successResponse($property, 201);
         } catch (Throwable $error) {
             return response()->json([$error]);
         };
+    }
+    public function contact_details(Request $request, $id)
+    {
+        $property = Property::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'email' => 'email|nullable',
+            'phone' => 'integer|nullable',
+        ]);
+        $contact_method_array = [
+            $request->showPhone ? 'phone,' : null,
+            $request->showEmail ? 'email,' : null,
+
+        ];
+        $viewing_option_array = [
+
+            $request->videoChat ? 'video-chat,' : null,
+            $request->inPerson ? 'in-person,' : null
+        ];
+        $contact_method = rtrim(implode('', $contact_method_array), ',');
+        $viewing_option = rtrim(implode('', $viewing_option_array), ',');
+        // return [$contact_method, $viewing_option];
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->messages(), 422);
+        }
+        try {
+            $property->update([
+                'inserter_email' => $request->email,
+                'inserter_phone' => $request->phone,
+                'contact_method' => $contact_method,
+                'viewing_option' => $viewing_option
+            ]);
+
+            return $this->successResponse($property->contact_method, 201);
+        } catch (Throwable $error) {
+            return $this->errorResponse($error, 500);
+        }
     }
 }
