@@ -21,15 +21,26 @@ class PropertyController extends ApiController
 
         $validator = Validator::make($request->all(), [
 
-            'type' => 'required',
-
+            'title' => 'required',
+            'rental_period' => 'required',
+            'monthly_rent' => 'required',
+            'available_from' => 'required',
+            'pet_friendly' => 'nullable',
+            'country' => 'required',
+            'city' => 'required',
+            'province' => 'required',
+            'description' => 'required',
 
         ]);
-        $rent_included_array = [$request->water ? 'water,' : null, $request->electricity ? 'electricity,' : null, $request->cable_tv ? 'cable-tv,' : null, $request->internet ? 'internet,' : null, $request->gas ? 'gas,' : null, $request->tenant_pay_all ? 'tenant-pay-all' : null];
-        $rent_included = implode('', $rent_included_array);
+        $rent_included_array = [$request->water ? 'water,' : null, $request->electricity ? 'electricity,' : null, $request->cable_tv ? 'cable-tv,' : null, $request->internet ? 'internet,' : null, $request->gas ? 'gas,' : null, $request->tenant_pay_all ? 'tenant-pay-all,' : null];
+        // $rent_included = implode('', $rent_included_array);
+        $rent_included = rtrim(implode('', $rent_included_array,), ',');
+
 
         if ($validator->fails()) {
-            return response()->json($validator->messages(), 422);
+            // return response()->json($validator->messages(), 422);
+            return $this->errorResponse($validator->messages(), 422);
+
         }
         try {
             $property = Property::create([
@@ -56,11 +67,15 @@ class PropertyController extends ApiController
                 'street_address' => $request->street_address,
                 "user_id" => $user->id,
                 'city_id' => $request->city,
-                'category_id' => 3,
+                'category_id' => '3',
             ]);
-            return response()->json(['data' => $property], 200);
+            // return response()->json(['data' => $property], 200);
+            return $this->successResponse($property, 201);
+
         } catch (Throwable $error) {
-            return response()->json([$error, $rent_included]);
+            // return response()->json([$error]);
+            return $this->errorResponse($error, 500);
+
         };
         // return response()->json([
         //     'property' => $property,
@@ -75,7 +90,7 @@ class PropertyController extends ApiController
 
         return response(['data', $property], 200);
     }
- 
+
 
     public function create_amenities(Request $request,  $id)
     {
@@ -120,7 +135,9 @@ class PropertyController extends ApiController
 
 
         if ($validator->fails()) {
-            return response()->json($validator->messages(), 422);
+            // return response()->json($validator->messages(), 422);
+            return $this->errorResponse($validator->messages(), 422);
+
         }
         try {
             $property->update([
