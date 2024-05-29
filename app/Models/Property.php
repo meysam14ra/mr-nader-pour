@@ -18,4 +18,8 @@ class Property extends Model
     {
         return $this->morphMany(Video::class, 'videoable');
     }
+    // public function city()
+    // {
+    //     return $this->belongsTo(City::class, 'city_id');
+    // }
 }

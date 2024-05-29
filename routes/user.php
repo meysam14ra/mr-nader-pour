@@ -26,13 +26,13 @@ Route::prefix('user')->middleware('auth:api')->group(function () {
     Route::prefix('/property')->group(function () {
         Route::controller(PropertyController::class)->group(function () {
             Route::post('/create_rental', 'create_rental');
+            Route::get('/get_city', 'get_city');
             Route::get('/get_rental/{id}', 'get_rental');
             Route::post('/create_amenities/{id}', 'create_amenities');
             Route::post('/create_media/{id}', 'create_media');
             Route::post('/contact_details/{id}', 'contact_details');
-            // Route::post('/create_amenities/{id}', function () {
-            //     return 'salam';
-            // });
+            Route::post('/edit_rental_datails/{id}', 'edit_rental_datails');
+            Route::post('/delete_media/{id}', 'delete_media');
         });
     });
 });
