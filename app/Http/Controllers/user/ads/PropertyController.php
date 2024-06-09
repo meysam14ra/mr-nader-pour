@@ -260,7 +260,7 @@ class PropertyController extends ApiController
                 'available_to' => $request->available_to,
                 'furnish' => $request->furnish,
                 'description' => $request->description,
-                'street_address' => $request->street_address,
+                // 'street_address' => $request->street_address,
                 // 'city_id' => $request->city_id,
 
                 'inserter_email' => $request->inserter_email,
