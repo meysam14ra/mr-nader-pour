@@ -19,20 +19,16 @@ class PropertyController extends ApiController
 {
     public function create_rental(Request $request)
     {
-        // dd($request);
         $user = User::find(Auth::id());
 
         $validator = Validator::make($request->all(), [
 
             'title' => 'required',
-            'rental_period' => 'required',
-            'monthly_rent' => 'required',
-            'available_from' => 'required',
             'pet_friendly' => 'nullable',
             'country' => 'required',
             'city_id' => 'required',
             'province' => 'required',
-            'description' => 'required',
+            'category_id' => 'required',
 
         ]);
 
@@ -75,7 +71,7 @@ class PropertyController extends ApiController
                 'street_address' => $request->street_address,
                 "user_id" => $user->id,
                 'city_id' => $request->city_id,
-                'category_id' => '3',
+                'category_id' => $request->category_id,
             ]);
             return $this->successResponse($property, 201);
         } catch (Throwable $error) {
@@ -249,6 +245,7 @@ class PropertyController extends ApiController
                 'place_type' => $request->place_type,
                 'postal_code' => $request->postal_code,
                 'monthly_rent' => $request->monthly_rent,
+                'price' => $request->price,
                 'included_rent' => implode(',', $request->included_rent),
                 'pet_friendly' => $request->pet_friendly,
                 'smoking_allowed' => $request->smooking_allowed,
@@ -262,7 +259,9 @@ class PropertyController extends ApiController
                 'description' => $request->description,
                 // 'street_address' => $request->street_address,
                 // 'city_id' => $request->city_id,
-
+                'construction_year' => $request->construction_year,
+                'price_mode' => $request->price_mode,
+                'energy' => $request->energy,
                 'inserter_email' => $request->inserter_email,
                 'inserter_phone' => $request->inserter_phone,
                 'contact_method' => implode(',', $request->contact_method),

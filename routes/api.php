@@ -23,4 +23,4 @@ Route::middleware('auth:api')->group(function () {
 });
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/realState/rental/residential', [RealStateController::class, 'residential']);
+Route::get('/realState', [RealStateController::class, 'properties']);
