@@ -18,6 +18,7 @@ class RentalResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
+            'slug' => $this->slug,
             'accessibility' => explode(',',$this->accessibility),
             'address' => $this->address,
             'amenities' => explode(',',$this->amenities),

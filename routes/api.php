@@ -24,3 +24,7 @@ Route::middleware('auth:api')->group(function () {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/realState', [RealStateController::class, 'properties']);
+Route::get('/allrealState', [RealStateController::class, 'allrealState']);
+Route::get('/allrental', [RealStateController::class, 'allrental']);
+Route::get('/allsell', [RealStateController::class, 'allsell']);
+Route::get('/property/{property:slug}', [RealStateController::class, 'singleProperty']);
