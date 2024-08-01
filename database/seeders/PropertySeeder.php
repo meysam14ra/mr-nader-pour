@@ -2,9 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\Image;
+use App\Models\Property;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Database\Factories\ImageFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class PropertySeeder extends Seeder
@@ -14,10 +17,6 @@ class PropertySeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('property')->insert([
-            'name' => Str::random(10),
-            'email' => Str::random(10).'@example.com',
-            'password' => Hash::make('password'),
-        ]);
+        Property::factory()->count(3)->has(Image::factory()->count(3))->create();
     }
 }

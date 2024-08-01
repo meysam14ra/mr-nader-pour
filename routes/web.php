@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Faker\Factory as Faker;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,4 +16,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+Route::get('/faker', function () {
+    $faker = Faker::create();
+
+        
+//   echo implode(',',$faker->randomElements(['agent', 'owner', 'property-manager', 'tanant']));
+  echo implode(',',$faker->randomElements(['water', 'electricity', 'cable-tv', 'internet', 'gas', 'tenant-pay-all'], null));
 });

@@ -85,7 +85,7 @@ class PropertyController extends ApiController
         // ], 201);
     }
 
-    public function get_city()
+    public function get_cities()
     {
         $cities = City::all();
         return $this->successResponse($cities, 200);

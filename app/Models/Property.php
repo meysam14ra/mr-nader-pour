@@ -27,13 +27,22 @@ class Property extends Model
     {
         return $this->morphMany(Video::class, 'videoable');
     }
-    // public function city()
-    // {
-    //     return $this->belongsTo(City::class, 'city_id');
-    // }
+    public function city()
+    {
+        return $this->belongsTo(City::class, 'city_id');
+    }
 
     public function scopeFilter($query)
     {
+        if (request()->has('category_id')) {
+            $category_id = explode(',', request()->category_id);
+            $query->whereIn('category_id', $category_id);
+            
+        }
+        if (request()->has('city')) {
+            $city = request()->city;
+            $query->where('city_id', $city);
+        }
 
         if (request()->has('furnish')) {
             $furnish = explode(',', request()->furnish,);

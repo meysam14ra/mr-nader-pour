@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CityController;
 use App\Http\Controllers\RealStateController;
 
 
@@ -24,6 +25,7 @@ Route::middleware('auth:api')->group(function () {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/realState', [RealStateController::class, 'properties']);
+Route::get('/cities', [CityController::class, 'get_cities']);
 Route::get('/allrealState', [RealStateController::class, 'allrealState']);
 Route::get('/allrental', [RealStateController::class, 'allrental']);
 Route::get('/allsell', [RealStateController::class, 'allsell']);

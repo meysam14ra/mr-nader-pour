@@ -15,32 +15,53 @@ class RealStateController extends ApiController
 {
     public function properties(Request $request)
     {
-        
-        $city = $request->city;
-        $category = $request->category_id;
-        // $residentails = $city->properties()->get();
-        $properties = Property::filter()->where('city_id', $city)->where('publish', 1)->where('accept', '1')->paginate(4);
-        
+
+
+        $properties = Property::filter()->where('publish', 1)->where('accept', '1')->paginate(12);
+
         $images = Image::all();
 
 
 
         try {
-            return $this->successResponse(['properties' => getPropertiesResources::collection($properties),
-            'links' => getPropertiesResources::collection($properties)->response()->getData()->links,
-            'meta' => getPropertiesResources::collection($properties)->response()->getData()->meta,
+            return $this->successResponse([
+                'properties' => getPropertiesResources::collection($properties),
+                'links' => getPropertiesResources::collection($properties)->response()->getData()->links,
+                'meta' => getPropertiesResources::collection($properties)->response()->getData()->meta,
 
-        
-        ], 201);
+
+            ], 201);
         } catch (Throwable $error) {
 
             return $this->errorResponse($error, 500);
         };
     }
+
+    public function singleProperty($slug)
+    {
+
+        $property = Property::where('slug', $slug)->first();
+        $images = Image::all();
+
+
+
+        return $this->successResponse(new RentalResource($property), 200);
+    }
+
+
+
+
+
+
+
+
+
+
+
     public function allrealState(Request $request)
     {
         $city = $request->city;
-        $properties = Property::where('city_id', $city)->where('publish', 1)->where('accept', '1')->get();
+        $properties = Property::filter()->where('publish', 1)->where('accept', '1')->get();
         $images = Image::all();
 
 
@@ -55,7 +76,7 @@ class RealStateController extends ApiController
     public function allrental(Request $request)
     {
         $city = $request->city;
-        $properties = Property::where('city_id', $city)->whereIn('category_id', [3, 4, 5])->where('publish', 1)->where('accept', '1')->get();
+        $properties = Property::filter()->whereIn('category_id', [3, 4, 5])->where('publish', 1)->where('accept', '1')->get();
         $images = Image::all();
 
 
@@ -70,32 +91,23 @@ class RealStateController extends ApiController
     public function allsell(Request $request)
     {
         $city = $request->city;
-        $properties = Property::filter()->where('city_id', $city)->whereIn('category_id', [6, 7, 8])->where('publish', 1)->where('accept', '1')->paginate(6);
+        $properties = Property::filter()->whereIn('category_id', [6, 7, 8])->where('publish', 1)->where('accept', '1')->paginate(6);
         // dd($properties);
         $images = Image::all();
 
 
 
         try {
-            return $this->successResponse(['properties' => getPropertiesResources::collection($properties),
-            'links' => getPropertiesResources::collection($properties)->response()->getData()->links,
-            'meta' => getPropertiesResources::collection($properties)->response()->getData()->meta,
+            return $this->successResponse([
+                'properties' => getPropertiesResources::collection($properties),
+                'links' => getPropertiesResources::collection($properties)->response()->getData()->links,
+                'meta' => getPropertiesResources::collection($properties)->response()->getData()->meta,
 
-        
-        ], 201);
+
+            ], 201);
         } catch (Throwable $error) {
 
             return $this->errorResponse($error, 500);
         };
-    }
-    public function singleProperty($slug)
-    {
-
-        $property = Property::where('slug', $slug)->first();
-        $images = Image::all();
-
-
-
-        return $this->successResponse(new RentalResource($property), 200);
     }
 }
