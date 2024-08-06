@@ -6,9 +6,10 @@ use Error;
 use Exception;
 use Throwable;
 
-use ErrorException;
-use BadMethodCallException;
 
+use ErrorException;
+
+use BadMethodCallException;
 use App\Traits\ApiResponser;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
@@ -44,58 +45,63 @@ class Handler extends ExceptionHandler
     }
     public function render($request, Throwable $e)
     {
-        if ($e instanceof ModelNotFoundException) {
-            DB::rollBack();
-            return $this->errorResponse($e->getMessage(), 404);
-        }
+        // return parent::render($request, $e);
+        // return $this->errorResponse($e->getMessage(), 500);
 
-        if ($e instanceof NotFoundHttpException) {
-            DB::rollBack();
-            return $this->errorResponse($e->getMessage(), 404);
-        }
+        if ($e instanceof ErrorException) {
 
-        if ($e instanceof MethodNotAllowedHttpException) {
-            DB::rollBack();
             return $this->errorResponse($e->getMessage(), 500);
         }
 
-        if ($e instanceof Exception) {
-            DB::rollBack();
-            return $this->errorResponse($e->getMessage(), 500);
-        }
 
-        if ($e instanceof BadMethodCallException) {
-            DB::rollBack();
-            return $this->errorResponse($e->getMessage(), 500);
-        }
+        // if ($e instanceof ModelNotFoundException) {
 
-        if ($e instanceof Error) {
-            DB::rollBack();
-            return $this->errorResponse($e->getMessage(), 500);
-        }
+        //     return $this->errorResponse($e->getMessage(), 404);
+        // }
 
-        if ($e instanceof QueryException) {
-            DB::rollBack();
-            return $this->errorResponse($e->getMessage(), 500);
-        }
+        // if ($e instanceof NotFoundHttpException) {
+        //     DB::rollBack();
+        //     return $this->errorResponse($e->getMessage(), 404);
+        // }
 
-        if ($e instanceof RelationNotFoundException) {
-            DB::rollBack();
-            return $this->errorResponse($e->getMessage(), 500);
-        }
-
-        // if ($e instanceof ApiException) {
+        // if ($e instanceof MethodNotAllowedHttpException) {
         //     DB::rollBack();
         //     return $this->errorResponse($e->getMessage(), 500);
         // }
 
+        // if ($e instanceof Exception) {
+        //     DB::rollBack();
+        //     return $this->errorResponse($e->getMessage(), 500);
+        // }
+
+        // if ($e instanceof BadMethodCallException) {
+        //     DB::rollBack();
+        //     return $this->errorResponse($e->getMessage(), 500);
+        // }
+
+        // if ($e instanceof Error) {
+        //     DB::rollBack();
+        //     return $this->errorResponse($e->getMessage(), 500);
+        // }
+
+        // if ($e instanceof QueryException) {
+        //     DB::rollBack();
+        //     return $this->errorResponse($e->getMessage(), 500);
+        // }
+
+        // if ($e instanceof RelationNotFoundException) {
+        //     DB::rollBack();
+        //     return $this->errorResponse($e->getMessage(), 500);
+        // }
+
+
+
         if (config('app.debug')) {
-            DB::rollBack();
+         
             return parent::render($request, $e);
         }
 
-        DB::rollBack();
+        
         return $this->errorResponse($e->getMessage(), 500);
     }
-    
 }

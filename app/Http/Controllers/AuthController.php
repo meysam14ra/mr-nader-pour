@@ -40,6 +40,7 @@ class AuthController extends ApiController
 
     public function login(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
 
             'email' => 'required|email',
@@ -48,14 +49,16 @@ class AuthController extends ApiController
 
         ]);
         if ($validator->fails()) {
-            return response()->json($validator->messages(), 422);
+            // return response()->json($validator->messages(), 422);
+            return  $this->errorResponse($validator->messages(), 422);
         }
         $user = User::where('email', $request->email)->first();
         if (!$user) {
-            return response()->json('user not found', 401);
+            return $this->errorResponse('user not found', 401);
         }
         if (!Hash::check($request->password, $user->password)) {
-            return response()->json('password is incorrect', 401);
+            // return response()->json('password is incorrect', 401);
+            return   $this->errorResponse('password is incorrect', 401);
         }
         $token = $user->createToken('myApp')->accessToken;
 

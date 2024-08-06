@@ -34,10 +34,36 @@ class Property extends Model
 
     public function scopeFilter($query)
     {
+
+
+        if (request()->has('sortBy')) {
+            $sortBy = request()->sortBy;
+
+            switch ($sortBy) {
+                case 'Most-Recent':
+                    $query->whereNotNull('published_at')->orderBy('published_at', 'desc');
+                    break;
+                case 'Lo-Price':
+                    $query->orderBy('price')->orderBy('monthly_rent');
+                    break;
+                case 'Hi-Price':
+                    $query->orderBy('price','Desc')->orderBy('monthly_rent','Desc');
+
+                    break;
+                case 'Most-Relevant':
+                    $query->where('quantity', '>', 0)->where('sale_price', '!=', 0)->where('date_on_sale_from', '<', Carbon::now())->where('date_on_sale_to', '>', Carbon::now());
+                    break;
+                default:
+                    $query;
+                    break;
+            }
+        }
+
+
         if (request()->has('category_id')) {
             $category_id = explode(',', request()->category_id);
+
             $query->whereIn('category_id', $category_id);
-            
         }
         if (request()->has('city')) {
             $city = request()->city;
@@ -66,21 +92,15 @@ class Property extends Model
             $query->whereIn('bathrooms', $bathrooms);
         }
 
-        if (request()->has('plusbedrooms')) {
-            $plusbedrooms = request()->plusbedrooms;
-            $query->where('bedrooms', '>=', $plusbedrooms);
-        }
+
         if (request()->has('pet_friendly')) {
             $pet_friendly = request()->pet_friendly;
             $query->where('pet_friendly',  $pet_friendly);
         }
-        if (request()->has('category_id')) {
-            $category_id = request()->category_id;
-            $query->where('category_id', $category_id);
-        }
+
         if (request()->has('type')) {
-            $type = request()->type;
-            $query->where('type', $type);
+            $type = explode(',', request()->type,);
+            $query->whereIn('type', $type);
         }
 
         if (request()->has('max_price')) {

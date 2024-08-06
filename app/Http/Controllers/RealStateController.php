@@ -25,9 +25,9 @@ class RealStateController extends ApiController
 
         try {
             return $this->successResponse([
+                'meta' => getPropertiesResources::collection($properties)->response()->getData()->meta,
                 'properties' => getPropertiesResources::collection($properties),
                 'links' => getPropertiesResources::collection($properties)->response()->getData()->links,
-                'meta' => getPropertiesResources::collection($properties)->response()->getData()->meta,
 
 
             ], 201);
