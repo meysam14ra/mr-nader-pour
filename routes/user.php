@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\user\ads\PropertyController;
+use App\Http\Controllers\user\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,13 @@ Route::prefix('user')->middleware('auth:api')->group(function () {
             Route::post('/contact_details/{id}', 'contact_details');
             Route::post('/edit_rental_datails/{id}', 'edit_rental_datails');
             Route::post('/delete_media/{id}', 'delete_media');
+        });
+    });
+    Route::prefix('/dashboard')->group(function () {
+        Route::controller(DashboardController::class)->group(function () {
+           
+            Route::get('/activeAds', 'activeAds');
+           
         });
     });
 });
