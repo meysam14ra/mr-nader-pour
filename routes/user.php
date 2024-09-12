@@ -27,7 +27,7 @@ Route::prefix('user')->middleware('auth:api')->group(function () {
     Route::prefix('/property')->group(function () {
         Route::controller(PropertyController::class)->group(function () {
             Route::post('/create_rental', 'create_rental');
-            Route::get('/get_city', 'get_city');
+            Route::get('/get_city', 'get_cities');
             Route::get('/get_rental/{id}', 'get_rental');
             Route::post('/create_amenities/{id}', 'create_amenities');
             Route::post('/create_media/{id}', 'create_media');
